@@ -189,7 +189,6 @@ export class SearchAssistencial {
                 ? new Date(procedimentoItens.dataExecucao)
                 : null,
             }
-            console.log(procedimento)
             await this.recordAssistencialRepository.recordProcedimento({
               procedimento,
             })
@@ -346,6 +345,7 @@ export class SearchAssistencial {
             await this.recordAssistencialRepository.deleteAllAssistencial(
               ID_INTEGRA,
             )
+            console.log('AA' + item)
           }
         }
       } catch (error) {
