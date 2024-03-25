@@ -341,7 +341,7 @@ export class SearchAssistencial {
               seq[0].NEXTVAL,
               item,
             )
-
+            // teste
             await this.recordAssistencialRepository.deleteAllAssistencial(
               ID_INTEGRA,
             )
