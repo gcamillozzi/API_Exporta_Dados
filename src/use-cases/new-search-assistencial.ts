@@ -4,8 +4,30 @@ import { AssistencialRepository } from '../repositories/search-assistencial-repo
 import { RecordLocalAssistencialRepository } from '../repositories/record-local-assistencial-repository'
 import { RecordAssistencialRepository } from '../repositories/record-assistencial-repository'
 import {
+  SearchAssistencialAdmissional,
+  SearchAssistencialAltaAdministrativa,
+  SearchAssistencialAnaliseCritica,
+  SearchAssistencialBeneficiario,
+  SearchAssistencialCateterVascularCentral,
+  SearchAssistencialCausaExterna,
+  SearchAssistencialCidPrincipal,
+  SearchAssistencialCidSecundario,
+  SearchAssistencialCondicaoAdquirida,
+  SearchAssistencialCTI,
   SearchAssistencialDataRequest,
-  SearchAssistencialDataResponse,
+  SearchAssistencialDrgBrasil,
+  SearchAssistencialDRGBrasilRefinado,
+  SearchAssistencialHeader,
+  SearchAssistencialHospital,
+  SearchAssistencialInstituicao,
+  SearchAssistencialMedico,
+  SearchAssistencialPartoAdequado,
+  SearchAssistencialProcedimento,
+  SearchAssistencialRecemNascido,
+  SearchAssistencialSondaVesicalDeDemora,
+  SearchAssistencialSuporteVentilatorio,
+  SearchAssistencialVariavel,
+
 } from '../models/Assistencial'
 
 export class SearchAssistencial {
@@ -13,340 +35,372 @@ export class SearchAssistencial {
     private assistencialRepository: AssistencialRepository,
     private recordAssistencialKnexRepository: RecordAssistencialRepository,
     private recordAssistencialRepository: RecordLocalAssistencialRepository,
-  ) {}
+  ) { }
 
   async execute(
     data: SearchAssistencialDataRequest,
-  ): Promise<SearchAssistencialDataResponse> {
-    let qtdPagina = 1
-    let havePage = true
-    while (havePage) {
-      const assistencial = await this.assistencialRepository.searchAssistencial(
-        { ...data, page: qtdPagina },
-      )
-      if (!assistencial.items[0]) {
-        havePage = false
-        break
-      } else {
-        console.log('Página: ' + qtdPagina)
-        qtdPagina++
-      }
-    }
-    console.log('A quantidade de páginas: ' + qtdPagina)
-    for (let pagina = 1; pagina < qtdPagina; pagina++) {
-      console.log('Lendo a pagina: ' + pagina)
+  ): Promise<void> {
+    let hasPage: boolean = true;
+
+    for (let counterPages = 1; hasPage == true; counterPages++) {
       const assistencial = await this.assistencialRepository.searchAssistencial(
         {
           ...data,
-          page: pagina,
+          page: counterPages,
         },
       )
+      if (assistencial.items.length == 0) {
+        hasPage = false;
+        break;
+      }
       try {
-        console.log('Quantidade: ' + assistencial.total)
+
         for (const registro of assistencial.items) {
           const ID_INTEGRA: number = parseInt(registro.id)
-          const send = {
-            ID_INTEGRA: registro.id,
-            SITUACAO: registro?.situacao || null,
-            CARATERINTERNACAO: registro?.caraterInternacao || null,
-            NUMEROOPERADORA: registro?.numeroOperadora || null,
-            NUMEROREGISTRO: registro?.numeroRegistro || null,
-            NUMEROATENDIMENTO: registro?.numeroAtendimento || null,
-            NUMEROAUTORIZACAO: registro?.numeroAutorizacao || null,
-            DATAINTERNACAO: registro?.dataInternacao
-              ? new Date(registro?.dataInternacao)
-              : null,
-            DATAAUTORIZACAO: registro?.dataAutorizacao
-              ? new Date(registro?.dataAutorizacao)
-              : null,
-            DATAALTA: registro?.dataAlta ? new Date(registro?.dataAlta) : null,
-            CONDICAOALTA: registro?.condicaoAlta || null,
-            RECAIDA: registro?.recaida || null,
-            ORIGEMREADMISSAO30DIAS: registro?.origemReadmissao30Dias || null,
-            ORIGEMRECAIDA30DIAS: registro?.origemRecaida30Dias || null,
-            IDINTERNACAORECAIDA: registro?.idInternacaoRecaida || null,
-            IDORIGEMRECAIDA: registro?.idOrigemRecaida || null,
-            TOTALHORASVENTILACAOMECANICA:
-              registro?.totalHorasVentilacaoMecanica || null,
-            MODALIDADEINTERNACAO: registro?.modalidadeInternacao || null,
-            DATACADASTROALTA: registro?.dataCadastroAlta
-              ? new Date(registro?.dataCadastroAlta)
-              : null || null,
-            USUARIOCADASTROALTA: registro?.usuarioCadastroAlta || null,
-            CORRECAOREGISTRO: registro?.correcaoRegistro || null,
-            USUARIOCORRECAO: registro?.usuarioCorrecao || null,
-            DATAULTIMORECALCULO: registro?.dataUltimoRecalculo || null,
-            INTERNADOOUTRASVEZES: registro?.internadooutrasvezes || null,
-            HOSPITALINTERNACAOANTERIOR:
-              registro?.hospitalinternacaoanterior || null,
-            REINTERNACAO: registro?.reinternacao || null,
-            DATAPREVISTAALTA: registro?.dataPrevistaAlta
-              ? new Date(registro?.dataPrevistaAlta)
-              : null,
-            PERMANENPREVISTAINTER:
-              registro?.permanenciaPrevistaNaInternacao || null,
-            PERMANENCIAPREVISTANAALTA:
-              registro?.permanenciaPrevistaNaAlta || null,
-            PERMANENCIAREAL: registro?.permanenciaReal || null,
-            PERCENTIL: registro?.percentil || null,
-            PROCEDENCIA: registro?.procedencia || null,
-            VENTILACAOMECANIA: registro?.ventilacaoMecanica || null,
-            DATACADASTRO: registro?.dataCadastro
-              ? new Date(registro?.dataCadastro)
-              : null,
-            USUARIOCADASTRO: registro?.usuarioCadastro || null,
-            USUARIOCADASTROALTA2: registro?.usuarioCadastroAlta || null,
-            DATAULTIMAALTERACAO: registro?.dataUltimaAlteracao
-              ? new Date(registro?.dataUltimaAlteracao)
-              : null,
-            USUARIOULTIMAALTERACAO: registro?.usuarioUltimaAlteracao || null,
-            CODIGO_INSTITUICAO: registro?.instituicao?.codigo || null,
-            NOME_INSTITUICAO: registro?.instituicao?.nome || null,
-            CODIGO_HOSPITAL: registro?.hospital?.codigo || null,
-            NOME_HOSPITAL: registro?.hospital?.nome || null,
-            CODIGOPACIENTE_BENEFICIARIO:
-              registro?.beneficiario?.codigoPaciente || null,
-            PLANO_BENEFICIARIO: registro?.beneficiario?.plano || null,
-            DATANASCIMENTO_BENEFICIARIO: registro?.beneficiario?.dataNascimento
-              ? new Date(registro?.beneficiario?.dataNascimento)
-              : null,
-            SEXO_BENEFICIARIO: registro?.beneficiario?.sexo || null,
-            IDADEEMANOS_BENEFICIARIO:
-              registro?.beneficiario?.idadeEmAnos || null,
-            IDADEEMMESES_BENEFICIARIO:
-              registro?.beneficiario?.idadeEmMeses || null,
-            IDADEEMDIAS_BENEFICIARIO:
-              registro?.beneficiario?.idadeEmDias || null,
+          const searchAssistencialHeader: SearchAssistencialHeader = {
+            id: registro.id,
+            situacao: registro.situacao,
+            caraterInternacao: registro.caraterInternacao,
+            numeroOperadora: registro.numeroOperadora,
+            numeroRegistro: registro.numeroRegistro,
+            numeroAtendimento: registro.numeroAtendimento,
+            numeroAutorizacao: registro.numeroAutorizacao,
+            dataInternacao: registro.dataInternacao,
+            dataAlta: registro.dataAlta,
+            condicaoAlta: registro.condicaoAlta,
+            dataAutorizacao: registro.dataAutorizacao,
+            internadoOutrasVezes: registro.internadoOutrasVezes,
+            hospitalInternacaoAnterior: registro.hospitalInternacaoAnterior,
+            reinternacao: registro.reinternacao,
+            recaida: registro.recaida,
+            idOrigemRecaida: registro.idOrigemRecaida,
+            origemReadmissao30Dias: registro.origemReadmissao30Dias,
+            origemRecaida30Dias: registro.origemRecaida30Dias,
+            idInternacaoRecaida: registro.idInternacaoRecaida,
+            dataPrevistaAlta: registro.dataPrevistaAlta,
+            permanenciaPrevistaNaInternacao: registro.permanenciaPrevistaNaInternacao,
+            permanenciaPrevistaNaAlta: registro.permanenciaPrevistaNaAlta,
+            permanenciaReal: registro.permanenciaReal,
+            percentil: registro.percentil,
+            procedencia: registro.procedencia,
+            ventilacaoMecanica: registro.ventilacaoMecanica,
+            totalHorasVentilacaoMecanica: registro.totalHorasVentilacaoMecanica,
+            modalidadeInternacao: registro.modalidadeInternacao,
+            dataCadastro: registro.dataCadastro,
+            usuarioCadastro: registro.usuarioCadastro,
+            dataCadastroAlta: registro.dataCadastroAlta,
+            usuarioCadastroAlta: registro.usuarioCadastroAlta,
+            dataUltimaAlteracao: registro.dataUltimaAlteracao,
+            usuarioUltimaAlteracao: registro.usuarioUltimaAlteracao,
+            correcaoRegistro: registro.correcaoRegistro,
+            usuarioCorrecao: registro.usuarioCorrecao,
+            dataUltimoRecalculo: registro.dataUltimoRecalculo,
+            leito: registro.leito,
+            condicaoAdquiridaGrave: registro.condicaoAdquiridaGrave,
+            registroPacienteMae: registro.registroPacienteMae,
+            maeNaoIdentificada: registro.maeNaoIdentificada,
+            estado: registro.estado,
+            cidade: registro.cidade,
+          };
+          //console.log("searchAssistencialHeader => ", searchAssistencialHeader);
+          //await this.recordAssistencialKnexRepository.recordAssistencialHeader(searchAssistencialHeader);          
+          const searchAssistencialInstituicao: SearchAssistencialInstituicao = {
+            id: searchAssistencialHeader.id,
+            codigo: registro.instituicao.codigo,
+            nome: registro.instituicao.nome,
+          };
+          // console.log("searchAssistencialInstituicao => ", searchAssistencialInstituicao);
+          await this.recordAssistencialKnexRepository.recordAssistencialInstituicao(searchAssistencialInstituicao);
+          const SearchAssistencialHospital: SearchAssistencialHospital = {
+            id: searchAssistencialHeader.id,
+            codigo: registro.hospital.codigo,
+            nome: registro.hospital.nome,
+            cnes: registro.hospital.cnes,
+          };
+          // console.log("SearchAssistencialHospital => ", SearchAssistencialHospital);
+          await this.recordAssistencialKnexRepository.recordAssistencialHospital(SearchAssistencialHospital);
 
-            CODIGO_CIDPRINC: registro?.cidPrincipal?.codigo || null,
-            DESCRICAO_CIDPRINC: registro?.cidPrincipal?.descricao || null,
-            SENSIVELCUIDADPRIMA_CIDPRINC:
-              registro?.cidPrincipal?.sensivelCuidadoPrimario || null,
-
-            CLASSIFICACAOROBSON_PARTADEQ: registro?.partoAdequado || null,
-            DRGADMISSIONAL: registro?.drgAdmissional?.codigo || null,
-            CAUSAEXTERNA: registro.causaExterna || null,
-            CAGRAVE: registro?.variaveis?.caGrave || null,
-            GERENCIAVELATENCAOPRIMARIA:
-              registro?.variaveis?.gerenciavelAtencaoPrimaria || null,
-            GERENCIAVELEMERGENCIA:
-              registro?.variaveis?.gerenciavelEmergencia || null,
-            IDOSOFRAGIL: registro?.variaveis?.idosoFragil || null,
-            CODIGO_DRGBRASILREFIN: registro?.drgBrasilRefinado?.codigo || null,
-            DESCRICAO_DRGBRASILREFIN:
-              registro?.drgBrasilRefinado?.descricao || null,
-            TIPO_DRGBRASILREFIN: registro?.drgBrasilRefinado?.tipo || null,
-            PESO_DRGBRASILREFIN: registro?.drgBrasilRefinado?.peso || null,
-            CODIGO_MDC_DRGBRASILREFIN:
-              registro?.drgBrasilRefinado?.mdc?.codigo || null,
-            DESCRICAO_MDC_DRGBRASILREFIN:
-              registro?.drgBrasilRefinado?.mdc?.descricao || null,
-            LEITO: registro?.leito || null,
-            DESCRICAO_CAUSAEXT: registro?.causaExterna?.descricao || null,
-            TEMPO_CAUSAEXT: registro?.causaExterna?.tempo || null,
-            DATAINICIAL_CAUSAEXT: registro?.causaExterna?.dataInicial
-              ? new Date(registro?.causaExterna?.dataInicial)
-              : null,
-            DATAFINAL_CAUSAEXT: registro?.causaExterna?.dataFinal
-              ? new Date(registro?.causaExterna?.dataFinal)
-              : null,
-          }
-          console.log(send.ID_INTEGRA)
-          await this.recordAssistencialRepository.recordAssistencial({
-            send,
-          })
-          for (const medicoItens of registro.medico) {
-            const medico = {
-              ID_INTEGRA,
-              NOME_MEDICO: medicoItens.nome || null,
-              UF_MEDICO: medicoItens.uf || null,
-              CRM_MEDICO: medicoItens.crm || null,
-              ESPECIALIDADE_MEDICO: medicoItens.especialidade || null,
-              MEDICORESPONSAVEL_MEDICO: medicoItens.medicoResponsavel || null,
-              TIPOATUACAO_MEDICO: medicoItens.tipoAtuacao || null,
-            }
-            await this.recordAssistencialRepository.recordMedico({ medico })
-          }
-          for (const cidSecundarioItens of registro.cidSecundario) {
-            const codigo = cidSecundarioItens.codigo
-            const descricao = cidSecundarioItens.descricao
-            const cidSecundario = {
-              ID_INTEGRA,
-              CODIGO_CIDSECUN: codigo || null,
-              DESCRICAO_CIDSECUN: descricao || null,
-            }
-            await this.recordAssistencialRepository.recordCidSecundario({
-              cidSecundario,
-            })
-          }
-          for (const procedimentoItens of registro.procedimento) {
-            const procedimento = {
-              ID_INTEGRA,
-              NOME_PROCEDIMENTO: procedimentoItens.nome,
-              CODIGO_PROCEDIMENTO: procedimentoItens.codigo,
-              ID_PROCEDIMENTO: procedimentoItens.codigo,
-              DATAEXECUCAO_PROCEDIMENTO: procedimentoItens.dataExecucao
-                ? new Date(procedimentoItens.dataExecucao)
-                : null,
-            }
-            await this.recordAssistencialRepository.recordProcedimento({
-              procedimento,
-            })
-            for (const medicoProcedimentoItens of procedimentoItens.medico) {
-              const medicoProcedimento = {
-                ID_INTEGRA,
-                ID_PROCEDIMENTO: procedimentoItens.codigo,
-                NOME_MEDICO_PROCEDIMENTO: medicoProcedimentoItens.nome || null,
-                UF_MEDICO_PROCEDIMENTO: medicoProcedimentoItens.uf || null,
-                CRM_MEDICO_PROCEDIMENTO: medicoProcedimentoItens.crm || null,
-                ESPECIALID_MEDICO_PROCED:
-                  medicoProcedimentoItens.especialidade || null,
-                TIPATUACAO_MEDICO_PROCED:
-                  medicoProcedimentoItens.medicoResponsavel || null,
-              }
-              await this.recordAssistencialRepository.recordMedicoProcedimento({
-                medicoProcedimento,
+          const SearchAssistencialBeneficiario: SearchAssistencialBeneficiario = {
+            id: searchAssistencialHeader.id,
+            codigoPaciente: registro.beneficiario.codigoPaciente,
+            plano: registro.beneficiario.plano,
+            dataNascimento: registro.beneficiario.dataNascimento,
+            sexo: registro.beneficiario.sexo,
+            recemNascido: registro.beneficiario.recemNascido,
+            particular: registro.beneficiario.particular,
+            idadeEmAnos: registro.beneficiario.idadeEmAnos,
+            idadeEmDias: registro.beneficiario.idadeEmDias,
+            idadeEmMeses: registro.beneficiario.idadeEmMeses,
+          };
+          // console.log("SearchAssistencialBeneficiario => ", SearchAssistencialBeneficiario);
+          await this.recordAssistencialKnexRepository.recordAssistencialBeneficiario(SearchAssistencialBeneficiario);
+          const searchAssistencialMedicos: SearchAssistencialMedico[] = [];
+          registro.medico.forEach((element) => {
+            searchAssistencialMedicos.push({
+              id: searchAssistencialHeader.id,
+              nome: element.nome,
+              uf: element.uf,
+              crm: element.crm,
+              codigoEspecialidade: element.codigoEspecialidade,
+              especialidade: element.especialidade,
+              medicoResponsavel: element.medicoResponsavel,
+              tipoAtuacao: element.tipoAtuacao,
+            });
+          });
+          //console.log("searchAssistencialMedicos => ", searchAssistencialMedicos);
+          await this.recordAssistencialKnexRepository.recordAssistencialMedico(searchAssistencialMedicos);
+          const SearchAssistencialCidSecundario: SearchAssistencialCidSecundario[] = [];
+          registro.cidSecundario.forEach((element) => {
+            SearchAssistencialCidSecundario.push({
+              id: searchAssistencialHeader.id,
+              codigo: element.codigo,
+              descricao: element.descricao
+            });
+          });
+          // console.log("SearchAssistencialCidSecundario => ", SearchAssistencialCidSecundario);
+          await this.recordAssistencialKnexRepository.recordAssistencialCidSecundario(SearchAssistencialCidSecundario);
+          const SearchAssistencialProcedimento: SearchAssistencialProcedimento[] = [];
+          registro.procedimento.forEach((element) => {
+            SearchAssistencialProcedimento.push({
+              id: searchAssistencialHeader.id,
+              codigo: element.codigo,
+              nome: element.nome,
+              porte: element.porte,
+              dataAutorizacao: element.dataAutorizacao,
+              dataSolicitacao: element.dataSolicitacao,
+              dataExecucao: element.dataExecucao,
+              dataExecucaoFinal: element.dataExecucaoFinal,
+              medicos: element.medico.map((elementMedico) => {
+                return {
+                  nome: elementMedico.nome,
+                  uf: elementMedico.uf,
+                  crm: elementMedico.crm,
+                  codigoEspecialidade: elementMedico.codigoEspecialidade,
+                  especialidade: elementMedico.especialidade,
+                  medicoResponsavel: elementMedico.medicoResponsavel,
+                  tipoAtuacao: elementMedico.tipoAtuacao,
+                };
               })
-            }
-          }
-          for (const ctiItens of registro.cti) {
-            const cti = {
-              ID_INTEGRA,
-              DATAINICIAL_CTI: ctiItens.dataInicial
-                ? new Date(ctiItens.dataInicial)
-                : null,
-              DATAFINAL_CTI: ctiItens.dataFinal
-                ? new Date(ctiItens.dataFinal)
-                : null,
-              CONDICAOALTA_CTI: ctiItens.condicaoAlta || null,
-              TIPO_CTI: ctiItens.tipo || null,
-              PERMANENCIAPREVISTANAALTA_CTI:
-                ctiItens.permanicenciaPrevistaNaAlta || null,
-              PERMANENCIAREAL_CTI: ctiItens.permantenciaReal || null,
-              NOME_MEDICO_CTI: ctiItens.medico?.nome || null,
-              UF_MEDICO_CTI: ctiItens.medico?.uf || null,
-              CRM_MEDICO_CTI: ctiItens.medico?.crm || null,
-              ESPECIALIDADE_MEDICO_CTI: ctiItens.medico?.especialidade || null,
-              CODIGO_HOSPITAL_CTI: ctiItens.hospital?.codigo || null,
-              NOME_HOSPITAL_CTI: ctiItens.hospital?.nome || null,
-              CODIGO_CIDPRINCIPAL_CTI: ctiItens.cidPrincipal?.codigo || null,
-              DESCRICAO_CIDPRINCIPAL_CTI:
-                ctiItens.descricaoCidPrincipal?.descricao || null,
-              LEITO_CTI: ctiItens.leito || null,
-            }
-            await this.recordAssistencialRepository.recordCti({
-              cti,
-            })
-          }
-          for (const rnItens of registro.rn) {
-            const rn = {
-              ID_INTEGRA,
-              PESONASCIMENTO_RN: rnItens.pesoNacimento || null,
-              IDADEGESTACIONAL_RN: rnItens.idadeGestacional || null,
-              COMPRIMENTO_RN: rnItens.comprimento || null,
-              SEXO_RN: rnItens.sexo || null,
-              NASCIDOVIVO_RN: rnItens.nascidoVivo || null,
-              TOCOTRAUMATISMO_RN: rnItens.tocoTraumatismo || null,
-              APGAR_RN: rnItens.apgar || null,
-              APGARQUINTOMINUTO_RN: rnItens.apgarQuintoMinuto || null,
-              ALTA48HORAS_RN: rnItens.Alta48horas || null,
-            }
-            await this.recordAssistencialRepository.recordRn({
-              rn,
-            })
-          }
-          for (const altaAdministrativaItens of registro.altaAdministrativa) {
-            const altaAdm = {
-              ID_INTEGRA,
-              NUMEROAUTORIZACAO_ALTAADMIN:
-                altaAdministrativaItens.numeroAutorizacao || null,
-              DATAAUTORIZACAO_ALTAADMIN:
-                altaAdministrativaItens?.dataAutorizacao
-                  ? new Date(altaAdministrativaItens.dataAutorizacao)
-                  : null,
-              DATAATENDIMINICIAL_ALTAADMIN: altaAdministrativaItens
-                .altaAdminstratica?.dataAtendiminicial
-                ? new Date(altaAdministrativaItens.dataAtendiminicial)
-                : null,
-              DATAATENDIMFINAL_ALTAADMIN:
-                altaAdministrativaItens?.dataAtendimentoFinal
-                  ? new Date(altaAdministrativaItens.dataAtendimentoFinal)
-                  : null,
-            }
-            await this.recordAssistencialRepository.recordAltaAdm({
-              altaAdm,
-            })
-          }
-          for (const analiseCriticaItens of registro.analiseCritica) {
-            const analiseCritica = {
-              ID_INTEGRA,
-              DATAANALISE_ANALICRIT: analiseCriticaItens.dataAnalise
-                ? new Date(analiseCriticaItens.dataAnalise)
-                : null,
-              ANALISECRITICA_ANALICRIT:
-                analiseCriticaItens.analiseCritica || null,
-            }
-            await this.recordAssistencialRepository.recordAnaliseCritica({
-              analiseCritica,
-            })
-          }
-          for (const suporteVentilatorioItens of registro.suporteVentilatorio) {
-            const suporteVentilatorio = {
-              ID_INTEGRA,
-              TIPO_SUPVENTIL: suporteVentilatorioItens.analiseCritica || null,
-              LOCAL_SUPVENTIL: suporteVentilatorioItens.local || null,
-              DATAINICIAL_SUPVENTIL: suporteVentilatorioItens.dataInicial
-                ? new Date(suporteVentilatorioItens.dataInicial)
-                : null,
-              DATAFINAL_SUPVENTIL: suporteVentilatorioItens.dataFinal
-                ? new Date(suporteVentilatorioItens.dataFinal)
-                : null,
-            }
-            await this.recordAssistencialRepository.recordSuporteVentilatorio({
-              suporteVentilatorio,
-            })
-          }
-          for (const sondaVesicalDeDemoraItens of registro.sondaVesicalDeDemora) {
-            const sondaVesicalDeDemora = {
-              ID_INTEGRA,
-              SONDAVESICALDEDEMORA:
-                sondaVesicalDeDemoraItens.sondaVesicalDeDemora || null,
-            }
-            await this.recordAssistencialRepository.recordSondaVesicalDeDemora({
-              sondaVesicalDeDemora,
-            })
-          }
-          for (const cateterVascularCentralItens of registro.cateterVascularCentral) {
-            const cateterVascularCentral = {
-              ID_INTEGRA,
-              CATETERVASCULARCENTRAL:
-                cateterVascularCentralItens.cateterVascularCentral,
-            }
-            await this.recordAssistencialRepository.recordCateterVacularCentral(
-              {
-                cateterVascularCentral,
+            });
+          });
+          // console.log("SearchAssistencialProcedimento => ", SearchAssistencialProcedimento[0].medicos);
+          await this.recordAssistencialKnexRepository.recordAssistencialProcedimento(SearchAssistencialProcedimento);
+          const SearchAssistencialCTI: SearchAssistencialCTI[] = [];
+          registro.cti.forEach((element) => {
+            SearchAssistencialCTI.push({
+              id: searchAssistencialHeader.id,
+              dataInicial: element.dataInicial,
+              dataFinal: element.dataFinal,
+              condicaoAlta: element.condicaoAlta,
+              tipo: element.tipo,
+              permanenciaPrevistaAlta: element.permanenciaPrevistaNaAlta,
+              permanenciaReal: element.permanenciaReal,
+              leito: element.leito,
+              medico: {
+                id: searchAssistencialHeader.id,
+                nome: element.medico.nome,
+                uf: element.medico.uf,
+                crm: element.medico.crm,
+                codigoEspecialidade: element.medico.codigoEspecialidade,
+                especialidade: element.medico.especialidade,
+                medicoResponsavel: element.medico.medicoResponsavel,
+                tipoAtuacao: element.medico.tipoAtuacao,
               },
-            )
-          }
-          console.log(ID_INTEGRA)
-          const assistencialData =
-            await this.recordAssistencialRepository.getAllAssistencial(
-              ID_INTEGRA,
-            )
+              cidPrincipal: {
+                id: searchAssistencialHeader.id,
+                codigo: element.cidPrincipal.codigo,
+                descricao: element.cidPrincipal.descricao,
+                sensivelCuidadoPrimario: element.cidPrincipal.sensivelCuidadoPrimario,
+              },
+              drgBrasilRefinado: {
+                id: searchAssistencialHeader.id,
+                codigo: element.drgBrasilRefinado.codigo,
+                descricao: element.drgBrasilRefinado.descricao,
+                tipo: element.drgBrasilRefinado.tipo,
+                peso: element.drgBrasilRefinado.peso,
+                mdc: {
+                  id: searchAssistencialHeader.id,
+                  codigo: element.drgBrasilRefinado.mdc.codigo,
+                  descricao: element.drgBrasilRefinado.mdc.descricao
+                }
+              },
+              hospital: {
+                id: searchAssistencialHeader.id,
+                codigo: element.hospital.codigo,
+                nome: element.hospital.nome,
+                cnes: element.hospital.cnes,
+              }
+            });
+          });
+          //console.log("SearchAssistencialCTI => ", SearchAssistencialCTI);
+          await this.recordAssistencialKnexRepository.recordAssistencialCTI(SearchAssistencialCTI);
+          const SearchAssistencialRecemNascido: SearchAssistencialRecemNascido[] = [];
+          registro.rn.forEach((element) => {
+            SearchAssistencialRecemNascido.push({
+              id: searchAssistencialHeader.id,
+              pesoNascimento: element.pesoNascimento,
+              idadeGestacional: element.idadeGestacional,
+              comprimento: element.comprimento,
+              sexo: element.sexo,
+              nascidoVivo: element.nascidoVivo,
+              tocotraumatismo: element.tocotraumatismo,
+              apgar: element.apgar,
+              apgarQuintoMinuto: element.apgarQuintoMinuto,
+              alta48horas: element.alta48horas,
+            });
+          });
+          await this.recordAssistencialKnexRepository.recordAssistencialRN(SearchAssistencialRecemNascido);
+          // console.log("SearchAssistencialRecemNascido => ", SearchAssistencialRecemNascido);
+          const SearchAssistencialCondicaoAdquirida: SearchAssistencialCondicaoAdquirida[] = [];
+          registro.condicaoAdquirida.forEach((element) => {
+            SearchAssistencialCondicaoAdquirida.push({
+              id: searchAssistencialHeader.id,
+              codigo: element.codigo,
+              descricao: element.descricao,
+              dataOcorrencia: element.dataOcorrencia,
+              dataManifestacao: element.dataManifestacao,
+              nome: element.nome,
+              grave: element.grave,
+            });
+          });
+          await this.recordAssistencialKnexRepository.recordAssistencialCondicaoAdquirida(SearchAssistencialCondicaoAdquirida);
+          //console.log("SearchAssistencialCondicaoAdquirida => ", SearchAssistencialCondicaoAdquirida);
+          const SearchAssistencialAltaAdministrativa: SearchAssistencialAltaAdministrativa[] = [];
+          registro.altaAdministrativa.forEach((element) => {
+            SearchAssistencialAltaAdministrativa.push({
+              id: searchAssistencialHeader.id,
+              numeroAtendimeno: element.numeroAtendimento,
+              numeroAutorizacao: element.numeroAutorizacao,
+              dataAutorizacao: element.dataAutorizacao,
+              dataAtendimentoInicial: element.dataAtendimentoInicial,
+              dataAtendimentoFinal: element.dataAtendimentoFinal,
+            });
+          });
+          await this.recordAssistencialKnexRepository.recordAssistencialAltaAdministrativa(SearchAssistencialAltaAdministrativa);
+          // console.log("SearchAssistencialAltaAdministrativa => ", SearchAssistencialAltaAdministrativa);
 
-          for (const item of assistencialData) {
-            const seq =
-              await this.recordAssistencialKnexRepository.getSequence()
-            await this.recordAssistencialKnexRepository.recordAssistencial(
-              seq[0].NEXTVAL,
-              item,
-            )
-            // teste
-            await this.recordAssistencialRepository.deleteAllAssistencial(
-              ID_INTEGRA,
-            )
-            console.log('AA' + item)
-          }
+          const SearchAssistencialAnaliseCritica: SearchAssistencialAnaliseCritica[] = [];
+          registro.analiseCritica.forEach((element) => {
+            SearchAssistencialAnaliseCritica.push({
+              id: searchAssistencialHeader.id,
+              dataAnalise: element.dataAnalise,
+              analiseCritica: element.analiseCritica
+            });
+          });
+          await this.recordAssistencialKnexRepository.recordAssistencialAnaliseCritica(SearchAssistencialAnaliseCritica);
+          // console.log("SearchAssistencialAnaliseCritica => ", SearchAssistencialAnaliseCritica);
+
+          const SearchAssistencialSuporteVentilatorio: SearchAssistencialSuporteVentilatorio[] = [];
+          registro.suporteVentilatorio.forEach((element) => {
+            SearchAssistencialSuporteVentilatorio.push({
+              id: searchAssistencialHeader.id,
+              tipo: element.tipo,
+              tipoInvasivo: element.tipoInvasivo,
+              local: element.local,
+              dataInicial: element.dataInicial,
+              dataFinal: element.dataFinal,
+              codigoCondicaoAdquirida: element.condicaoAdquirida?.codigo,
+              descricaoCondicaoAdquirida: element.condicaoAdquirida?.descricao,
+              dataCondicaoAdquirida: element.condicaoAdquirida?.dataOcorrencia,
+            });
+          });
+          await this.recordAssistencialKnexRepository.recordAssistencialSuporteVentilatorio(SearchAssistencialSuporteVentilatorio);
+          // console.log("SearchAssistencialSuporteVentilatorio => ", SearchAssistencialSuporteVentilatorio);
+          const SearchAssistencialCidPrincipal: SearchAssistencialCidPrincipal = {
+            id: searchAssistencialHeader.id,
+            codigo: registro.cidPrincipal.codigo,
+            descricao: registro.cidPrincipal.descricao,
+            sensivelCuidadoPrimario: registro.cidPrincipal.sensivelCuidadoPrimario,
+          };
+          await this.recordAssistencialKnexRepository.recordAssistencialCidPrincipal(SearchAssistencialCidPrincipal);
+          // console.log("SearchAssistencialCidPrincipal => ", SearchAssistencialCidPrincipal);
+          const SearchAssistencialDrgBrasil: SearchAssistencialDrgBrasil = {
+            id: searchAssistencialHeader.id,
+            codigo: registro.drgBrasil?.codigo,
+            descricao: registro.drgBrasil?.descricao,
+            permanenciaPrevistaNaAlta: registro.drgBrasil?.permanenciaPrevistaNaAlta,
+            permanenciaPrevistaNainternacao: registro.drgBrasil?.permanenciaPrevistaNaInternacao,
+            tipo: registro.drgBrasil?.tipo,
+            peso: registro.drgBrasil?.peso,
+          };
+          await this.recordAssistencialKnexRepository.recordAssistencialDrgBrasil(SearchAssistencialDrgBrasil);
+          // console.log("SearchAssistencialDrgBrasil => ", SearchAssistencialDrgBrasil);
+          const SearchAssistencialDRGBrasilRefinado: SearchAssistencialDRGBrasilRefinado = {
+            id: searchAssistencialHeader.id,
+            codigo: registro.drgBrasilRefinado.codigo,
+            descricao: registro.drgBrasilRefinado.descricao,
+            tipo: registro.drgBrasilRefinado.tipo,
+            peso: registro.drgBrasilRefinado.peso,
+            mdc: null,
+          };
+          await this.recordAssistencialKnexRepository.recordAssistencialDrgBrasilRefinado(SearchAssistencialDRGBrasilRefinado);
+          // console.log("SearchAssistencialDRGBrasilRefinado => ", SearchAssistencialDRGBrasilRefinado);
+          // return;
+          const SearchAssistencialSondaVesicalDeDemora: SearchAssistencialSondaVesicalDeDemora[] = [];
+          registro.sondaVesicalDeDemora.forEach((element) => {
+            // console.log("condicaoAdquiridaSondaVesicalDeDemora => ", element.condicaoAdquiridaSondaVesicalDeDemora);
+            SearchAssistencialSondaVesicalDeDemora.push({
+              id: searchAssistencialHeader.id,
+              local: element.local,
+              dataInicial: element.dataInicial,
+              dataFinal: element.dataFinal,
+              codigoCondicaoAdquirida: element.condicaoAdquiridaSondaVesicalDeDemora?.codigo,
+              descricaoCondicaoAdquirida: element.condicaoAdquiridaSondaVesicalDeDemora?.descricao,
+              dataOcorrenciaCondicaoAdquirida: element.condicaoAdquiridaSondaVesicalDeDemora?.dataOcorrencia,
+            });
+          });
+          await this.recordAssistencialKnexRepository.recordAssistencialSondaVesicalDemora(SearchAssistencialSondaVesicalDeDemora);
+          //console.log("SearchAssistencialSondaVesicalDeDemora => ", SearchAssistencialSondaVesicalDeDemora);
+
+          const SearchAssistencialCateterVascularCentral: SearchAssistencialCateterVascularCentral[] = [];
+          registro.cateterVascularCentral.forEach((element) => {
+            //console.log("SearchAssistencialCateterVascularCentral ========> ", element.condicaoAdquiridaCateterVascularCentral);
+
+            SearchAssistencialCateterVascularCentral.push({
+              id: searchAssistencialHeader.id,
+              local: element.local,
+              dataInicial: element.dataInicial,
+              dataFinal: element.dataFinal,
+              codigoCondicaAdquirida: element.condicaoAdquiridaCateterVascularCentral?.codigo,
+              descricaoCondicaAdquirida: element.condicaoAdquiridaCateterVascularCentral?.descricao,
+              dataCondicaAdquirida: element.condicaoAdquiridaCateterVascularCentral?.dataOcorrencia,
+            });
+          });
+          await this.recordAssistencialKnexRepository.recordAssistencialCateterVascular(SearchAssistencialCateterVascularCentral);
+          // console.log("SearchAssistencialCateterVascularCentral => ", SearchAssistencialCateterVascularCentral);
+
+          const SearchAssistencialPartoAdequado: SearchAssistencialPartoAdequado = {
+            id: searchAssistencialHeader.id,
+            classificacaoRobson: registro.partoAdequado?.classificacaoRobson
+          };
+          // console.log("SearchAssistencialPartoAdequado => ", SearchAssistencialPartoAdequado);
+          await this.recordAssistencialKnexRepository.recordAssistencialPartoAdequado(SearchAssistencialPartoAdequado);
+          const SearchAssistencialAdmissional: SearchAssistencialAdmissional = {
+            id: searchAssistencialHeader.id,
+            codigo: registro.drgAdmissional.codigo,
+            descricao: registro.drgAdmissional.descricao,
+          };
+          await this.recordAssistencialKnexRepository.recordAssistencialAdmissional(SearchAssistencialAdmissional);
+          // console.log("SearchAssistencialAdmissional => ", SearchAssistencialAdmissional);
+          //return;
+          const SearchAssistencialVariaveis: SearchAssistencialVariavel = {
+            id: searchAssistencialHeader.id,
+            caGrave: registro.variaveis.caGrave,
+            gerenciavelAtencaoPrimaria: registro.variaveis.gerenciavelAtencaoPrimaria,
+            gerenciavelEmergencia: registro.variaveis.gerenciavelEmergencia,
+          };
+          await this.recordAssistencialKnexRepository.recordAssistencialVariaveis(SearchAssistencialVariaveis);
+          // console.log("SearchAssistencialVariaveis => ", SearchAssistencialVariaveis);
+          const SearchAssistencialCausaExterna: SearchAssistencialCausaExterna[] = [];
+          registro.causaExterna.forEach((element) => {
+            SearchAssistencialCausaExterna.push({
+              id: searchAssistencialHeader.id,
+              descricao: element.descricao,
+              tempo: element.tempo,
+              dataInicial: element.dataInicial,
+              dataFinal: element.dataFinal,
+            });
+          });
         }
       } catch (error) {
         console.error('Erro ao inserir dados:', error)

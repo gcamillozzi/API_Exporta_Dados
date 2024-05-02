@@ -16,8 +16,9 @@ export class AxiosGetAcessTokenRepository implements GetAcessTokenRepository {
       url: apiUrl,
       data,
     }
-
+    
     const response = await makeRequest(requestConfig)
+   // console.log("response access token => ", response.data);
     return response.data
   }
 }

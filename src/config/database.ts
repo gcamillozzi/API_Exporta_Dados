@@ -20,7 +20,7 @@ switch (databaseClient) {
         connectString: env.DB_CONNECTION_STRING,
         pool: {
           min: 1,
-          max: 50,
+          max: 150,
         },
       },
     }
@@ -31,7 +31,7 @@ switch (databaseClient) {
       connection: env.DB_CONNECTION_STRING,
       pool: {
         min: 1,
-        max: 50,
+        max: 150,
       },
     }
     break

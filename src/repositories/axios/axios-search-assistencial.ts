@@ -25,6 +25,7 @@ export class AxiosSearchAssistencialRepository
       data,
     }
     const response = await makeRequest(requestConfig)
+   // console.log("response search => ", response.data)
     return response.data
   }
 }
