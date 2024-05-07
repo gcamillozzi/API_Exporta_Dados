@@ -24,10 +24,10 @@ export class SqlLiteRecordAssistencialRepository
 
   async recordCidSecundario({ cidSecundario }): Promise<void> {
     try {
-      console.log(cidSecundario)
+      // console.log(cidSecundario)
       await database('DRG_CID_SECUNDARIO').insert(cidSecundario)
     } catch (error) {
-      console.error('Error inserting DrgRegistroMedico')
+      // console.error('Error inserting DrgRegistroMedico')
       throw error
     }
   }
@@ -62,9 +62,9 @@ export class SqlLiteRecordAssistencialRepository
   async recordRn({ rn }): Promise<void> {
     try {
       await database('DRG_RN').insert(rn)
-      console.log('DrgRegistroMedico inserted successfully!')
+      // console.log('DrgRegistroMedico inserted successfully!')
     } catch (error) {
-      console.error('Error inserting DrgRegistroMedico')
+      // console.error('Error inserting DrgRegistroMedico')
       throw error
     }
   }

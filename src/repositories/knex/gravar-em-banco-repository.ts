@@ -507,9 +507,9 @@ export class KnexRecordAssistencialRepository
       );
       END;
     `)
-      console.log("resultado => ", result);
+      // console.log("resultado => ", result);
     } catch (error) {
-      console.log("error recordAssistencialInstituicao => ", error);
+      // console.log("error recordAssistencialInstituicao => ", error);
     }
   }
 
@@ -567,9 +567,9 @@ export class KnexRecordAssistencialRepository
       );
       END;
     `)
-      console.log("resultado => ", result);
+      // console.log("resultado => ", result);
     } catch (error) {
-      console.log("error recordAssistencialHeader => ", error);
+      // console.log("error recordAssistencialHeader => ", error);
     }
   }
 

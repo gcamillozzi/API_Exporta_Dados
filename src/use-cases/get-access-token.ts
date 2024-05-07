@@ -17,7 +17,7 @@ export class GetAccessTokenUseCase {
 
       this.environmentVariables.API_TOKEN = accessToken
 
-      console.log('O accessToken se já exitia', accessToken)
+      // console.log('O accessToken se já exitia', accessToken)
 
       return
     }
@@ -27,7 +27,7 @@ export class GetAccessTokenUseCase {
     const accessToken = apiResponse
 
     this.environmentVariables.API_TOKEN = accessToken
-    console.log('O accessToken se não existia', accessToken)
+    // console.log('O accessToken se não existia', accessToken)
     return
   }
 }
