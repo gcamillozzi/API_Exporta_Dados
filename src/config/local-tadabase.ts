@@ -171,7 +171,7 @@ knexInstance.schema
     table.string('CATETERVASCULARCENTRAL')
   })
   .then(() => {
-    console.log('Todas as tabelas foram criadas com sucesso.')
+    // console.log('Todas as tabelas foram criadas com sucesso.')
   })
   .catch((error) => {
     console.error('Erro ao criar as tabelas:', error)

@@ -534,6 +534,7 @@ export interface SearchAssistencialVariavel {
   caGrave: string | null
   gerenciavelAtencaoPrimaria: string | null
   gerenciavelEmergencia: string | null
+  idosoFragil: string | null
 }
 
 export interface SearchAssistencialCausaExterna {

@@ -226,9 +226,9 @@ export class SearchAssistencial {
               },
               hospital: {
                 id: searchAssistencialHeader.id,
-                codigo: element.hospital.codigo,
-                nome: element.hospital.nome,
-                cnes: element.hospital.cnes,
+                codigo: element.hospital?.codigo,
+                nome: element.hospital?.nome,
+                cnes: element.hospital?.cnes,
               }
             });
           });
@@ -388,6 +388,7 @@ export class SearchAssistencial {
             caGrave: registro.variaveis.caGrave,
             gerenciavelAtencaoPrimaria: registro.variaveis.gerenciavelAtencaoPrimaria,
             gerenciavelEmergencia: registro.variaveis.gerenciavelEmergencia,
+            idosoFragil: registro.variaveis.idosoFragil
           };
           await this.recordAssistencialKnexRepository.recordAssistencialVariaveis(SearchAssistencialVariaveis);
           // console.log("SearchAssistencialVariaveis => ", SearchAssistencialVariaveis);
@@ -401,6 +402,7 @@ export class SearchAssistencial {
               dataFinal: element.dataFinal,
             });
           });
+          
         }
       } catch (error) {
         console.error('Erro ao inserir dados:', error)

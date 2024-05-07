@@ -23,5 +23,6 @@ export interface RecordAssistencialRepository {
   recordAssistencialAdmissional(data: SearchAssistencialAdmissional): Promise<void>
   recordAssistencialVariaveis(data: SearchAssistencialVariavel): Promise<void>
   recordAssistencialCausaExterna(data: SearchAssistencialCausaExterna[]): Promise<void>
+  verificarValor(valor: any): string | null
   getSequence(): Promise<number>
 }
