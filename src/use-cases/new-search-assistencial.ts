@@ -103,7 +103,7 @@ export class SearchAssistencial {
             cidade: registro.cidade,
           };
           //console.log("searchAssistencialHeader => ", searchAssistencialHeader);
-          //await this.recordAssistencialKnexRepository.recordAssistencialHeader(searchAssistencialHeader);          
+          await this.recordAssistencialKnexRepository.recordAssistencialHeader(searchAssistencialHeader);          
           const searchAssistencialInstituicao: SearchAssistencialInstituicao = {
             id: searchAssistencialHeader.id,
             codigo: registro.instituicao.codigo,
