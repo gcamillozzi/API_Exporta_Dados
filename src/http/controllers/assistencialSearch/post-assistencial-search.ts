@@ -23,7 +23,7 @@ export async function postAssistencialSearch(
     const assistencialResult = await searchAssistencial.execute({
       dataUltimaAlteracao,
     })
-
+    console.log("Operação realizada com sucesso");
     return reply.status(200).send(assistencialResult)
   } catch (err) {
     return reply.status(400).send({ message: err.message })
