@@ -31,7 +31,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialCateterVascular  => ", error);
+      console.log("error recordAssistencialCateterVascular  => ", error);
     }
   }
   async recordAssistencialVariaveis(data: SearchAssistencialVariavel): Promise<void> {
@@ -52,7 +52,7 @@ export class KnexRecordAssistencialRepository
       // console.log("resultado => ", result);
 
     } catch (error) {
-      // console.log("error recordAssistencialAdmissional => ", error);
+      console.log("error recordAssistencialAdmissional => ", error);
     }
   }
   async recordAssistencialAdmissional(data: SearchAssistencialAdmissional): Promise<void> {
@@ -71,7 +71,7 @@ export class KnexRecordAssistencialRepository
       // console.log("resultado => ", result);
 
     } catch (error) {
-      // console.log("error recordAssistencialAdmissional => ", error);
+      console.log("error recordAssistencialAdmissional => ", error);
     }
   }
   async recordAssistencialPartoAdequado(data: SearchAssistencialPartoAdequado): Promise<void> {
@@ -89,7 +89,7 @@ export class KnexRecordAssistencialRepository
       // console.log("resultado => ", result);
 
     } catch (error) {
-      // console.log("error recordAssistencialDrgBrasilRefinado => ", error);
+      console.log("error recordAssistencialDrgBrasilRefinado => ", error);
     }
   }
   async recordAssistencialCateterVascular(data: SearchAssistencialCateterVascularCentral[]): Promise<void> {
@@ -112,7 +112,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialCateterVascular  => ", error);
+      console.log("error recordAssistencialCateterVascular  => ", error);
     }
   }
   async recordAssistencialSondaVesicalDemora(data: SearchAssistencialSondaVesicalDeDemora[]): Promise<void> {
@@ -135,7 +135,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialSondaVesicalDemora  => ", error);
+      console.log("error recordAssistencialSondaVesicalDemora  => ", error);
     }
   }
   async recordAssistencialDrgBrasilRefinado(data: SearchAssistencialDRGBrasilRefinado): Promise<void> {
@@ -156,7 +156,7 @@ export class KnexRecordAssistencialRepository
       // console.log("resultado => ", result);
 
     } catch (error) {
-      // console.log("error recordAssistencialDrgBrasilRefinado => ", error);
+      console.log("error recordAssistencialDrgBrasilRefinado => ", error);
     }
   }
   async recordAssistencialDrgBrasil(data: SearchAssistencialDrgBrasil): Promise<void> {
@@ -179,7 +179,7 @@ export class KnexRecordAssistencialRepository
       // console.log("resultado => ", result);
 
     } catch (error) {
-      // console.log("error recordAssistencialDrgBrasil => ", error);
+      console.log("error recordAssistencialDrgBrasil => ", error);
     }
   }
   async recordAssistencialCidPrincipal(data: SearchAssistencialCidPrincipal): Promise<void> {
@@ -199,7 +199,7 @@ export class KnexRecordAssistencialRepository
       // console.log("resultado => ", result);
 
     } catch (error) {
-      // console.log("error recordAssistencialCidPrincipal => ", error);
+      console.log("error recordAssistencialCidPrincipal => ", error);
     }
   }
   async recordAssistencialSuporteVentilatorio(data: SearchAssistencialSuporteVentilatorio[]): Promise<void> {
@@ -224,7 +224,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialSuporteVentilatorio => ", error);
+      console.log("error recordAssistencialSuporteVentilatorio => ", error);
     }
   }
   async recordAssistencialAnaliseCritica(data: SearchAssistencialAnaliseCritica[]): Promise<void> {
@@ -244,7 +244,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialAnaliseCritica => ", error);
+      console.log("error recordAssistencialAnaliseCritica => ", error);
     }
   }
   async recordAssistencialAltaAdministrativa(data: SearchAssistencialAltaAdministrativa[]): Promise<void> {
@@ -266,7 +266,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialAltaAdministrativa => ", error);
+      console.log("error recordAssistencialAltaAdministrativa => ", error);
     }
   }
   async recordAssistencialCondicaoAdquirida(data: SearchAssistencialCondicaoAdquirida[]): Promise<void> {
@@ -289,7 +289,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialCondicaoAdquirida => ", error);
+      console.log("error recordAssistencialCondicaoAdquirida => ", error);
     }
   }
   async recordAssistencialRN(data: SearchAssistencialRecemNascido[]): Promise<void> {
@@ -315,7 +315,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialRN => ", error);
+      console.log("error recordAssistencialRN => ", error);
     }
   }
   async recordAssistencialCTI(data: SearchAssistencialCTI[]): Promise<void> {
@@ -354,7 +354,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialCTI => ", error);
+      console.log("error recordAssistencialCTI => ", error);
     }
   }
   async recordAssistencialProcedimento(data: SearchAssistencialProcedimento[]): Promise<void> {
@@ -408,7 +408,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialProcedimento => ", error);
+      console.log("error recordAssistencialProcedimento => ", error);
     }
   }
 
@@ -428,7 +428,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialCidSecundario => ", error);
+      console.log("error recordAssistencialCidSecundario => ", error);
     }
   }
   async recordAssistencialMedico(data: SearchAssistencialMedico[]): Promise<void> {
@@ -452,7 +452,7 @@ export class KnexRecordAssistencialRepository
         // console.log("resultado => ", result);
       }
     } catch (error) {
-      // console.log("error recordAssistencialMedico => ", error);
+      console.log("error recordAssistencialMedico => ", error);
     }
   }
   async recordAssistencialBeneficiario(data: SearchAssistencialBeneficiario): Promise<void> {
@@ -476,7 +476,7 @@ export class KnexRecordAssistencialRepository
     `)
       // console.log("resultado => ", result);
     } catch (error) {
-      // console.log("error recordAssistencialBeneficiario => ", error);
+      console.log("error recordAssistencialBeneficiario => ", error);
     }
   }
   async recordAssistencialHospital(data: SearchAssistencialHospital): Promise<void> {
@@ -493,7 +493,7 @@ export class KnexRecordAssistencialRepository
     `)
       // console.log("resultado => ", result);
     } catch (error) {
-      // console.log("error recordAssistencialHospital => ", error);
+      console.log("error recordAssistencialHospital => ", error);
     }
   }
   async recordAssistencialInstituicao(data: SearchAssistencialInstituicao): Promise<void> {
@@ -509,7 +509,7 @@ export class KnexRecordAssistencialRepository
     `)
       // console.log("resultado => ", result);
     } catch (error) {
-      // console.log("error recordAssistencialInstituicao => ", error);
+      console.log("error recordAssistencialInstituicao => ", error);
     }
   }
 
@@ -569,7 +569,7 @@ export class KnexRecordAssistencialRepository
     `)
       // console.log("resultado => ", result);
     } catch (error) {
-      // console.log("error recordAssistencialHeader => ", error);
+      console.log("error recordAssistencialHeader => ", error);
     }
   }
 
